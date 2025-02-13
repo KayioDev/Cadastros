@@ -1,0 +1,173 @@
+@page "/cadastros"
+<PageTitle>Cadastros</PageTitle>
+@inject HttpClient Http;
+@inject AppDbContext Db;
+@using Microsoft.EntityFrameworkCore;
+
+<Alert Mensagem="@Mensagem" TipoAlerta="@TipoAlerta"></Alert>
+<form class="row row-cols-lg-auto g-3 align-items-center">
+  <div class="col-12">
+    <label class="visually-hidden" for="inlineFormSelectPref">Preference</label>
+    <select class="form-select" id="inlineFormSelectPref" @bind="usuarioGuidId">
+      <option value="" selected>Selecione um usuário</option>
+      @if (usuarios is not null)
+      {
+        @foreach (var user in usuarios)
+        {
+          <option value="@user.Id">@user.Nome</option>
+        }
+      }
+    </select>
+  </div>
+  <div class="col-12">
+    <button type="button" class="btn btn-primary" @onclick="MostrarDados">Mostrar dados</button>
+  </div>
+   <div class="col-12">
+    <button type="button" class="btn btn-primary" @onclick="ApagarUsuario">Apagar Usuário</button>
+  </div>
+</form>
+
+
+ @if (mostrarModal)
+{
+    <div class="modal-dialog modal-xl" style="z-index: 1055;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do Usuário</h5>
+                <button type="button" class="btn-close" @onclick="FecharModal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nome:</strong> @novoUsuario?.Nome</p>
+                <p><strong>Endereço:</strong> @novoUsuario?.Logradouro</p>
+                <p><strong>Email:</strong> @novoUsuario?.Email</p>
+                <p><strong>Cidade:</strong> @novoUsuario?.Cidade</p>
+                <p><strong>Estado:</strong> @novoUsuario?.Estado</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="FecharModal">Fechar</button>
+                <button type="button" class="btn btn-secondary" @onclick="EditarDados">Editar dados</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show" style="z-index: 1045;"></div>
+} 
+
+ @if (modalEdit)
+{
+    <div class="modal-dialog modal-xl" style="z-index: 1055;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Editar usuário</h5>
+                <button type="button" class="btn-close" @onclick="FecharModal"></button>
+            </div>
+            <div class="modal-body">
+              @if(novoUsuario is not null)
+              {     
+                    <EditForm Model="novoUsuario" OnValidSubmit="SalvarEdicao">
+                    <DataAnnotationsValidator />
+                    <p>Nome:</p>
+                    <input class="form-control" @bind="novoUsuario.Nome" placeholder="Insira novo nome" />
+                    <p>Logradouro:</p>
+                    <input class="form-control" @bind="novoUsuario.Logradouro" placeholder="Insira novo Endereço" />
+                    <p>Email:</p>
+                    <input class="form-control" @bind="novoUsuario.Email" placeholder="Insira novo email" />
+                    <p>Estado:</p>
+                    <input class="form-control" @bind="novoUsuario.Estado" placeholder="Insira novo estado" />
+                    <p>Cidade:</p>
+                    <input class="form-control" @bind="novoUsuario.Cidade" placeholder="Insira nova Cidade" />
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    </EditForm>
+              }
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="FecharModal">Fechar</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show" style="z-index: 1045;"></div>
+} 
+
+
+@code {
+    private List<Usuario> usuarios = new();
+    private Guid usuarioGuidId ;
+    private Usuario? novoUsuario ;
+
+    private string? Mensagem = "";
+    private string? TipoAlerta = "";
+    private bool mostrarModal = false;
+
+    private bool modalEdit = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+          usuarios = await Db.Usuarios.ToListAsync();
+          usuarios.Sort((a,b)=> string.Compare(a.Nome, b.Nome, StringComparison.OrdinalIgnoreCase));
+    }
+
+
+     private void MostrarDados()
+    {
+   
+        if (usuarioGuidId != Guid.Empty)
+        {
+            novoUsuario = usuarios.FirstOrDefault(user => user.Id == usuarioGuidId);
+            mostrarModal = true;
+        }
+    }
+
+     private async Task ApagarUsuario () 
+     {
+      if(usuarioGuidId != Guid.Empty)
+      {
+        var usuarioSelecionado = await Db.Usuarios.FindAsync(usuarioGuidId);
+        if( usuarioSelecionado != null)
+        {
+          Db.Usuarios.Remove(usuarioSelecionado);
+          await Db.SaveChangesAsync();
+
+          await CarregarUsuarios();
+        
+          Mensagem = "Usuario apagado com sucesso";
+          TipoAlerta = "success";
+          usuarioGuidId = Guid.Empty;
+          
+         StateHasChanged();
+        }
+      }
+     }
+    private void EditarDados () 
+    {
+      modalEdit = true;
+      mostrarModal = false;
+    }
+    private void FecharModal()
+    {
+         mostrarModal = false;
+         modalEdit = false;
+    }
+
+     private async Task SalvarEdicao()
+    {
+        if (novoUsuario != null)
+        {
+         Db.Usuarios.Update(novoUsuario);
+         await Db.SaveChangesAsync();
+
+        Mensagem = "Usuário editado com sucesso!";
+        TipoAlerta = "success";
+        modalEdit = false;
+        StateHasChanged();
+        await Task.Delay(3000);
+        Mensagem = null;        
+        }
+    } 
+    private async Task CarregarUsuarios()
+{
+    usuarios = await Db.Usuarios.ToListAsync();
+}
+
+}
+

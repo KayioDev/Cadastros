@@ -1,0 +1,42 @@
+[
+  {
+    "Id": "b48a0b65-d35b-4a96-a000-596fb8591831",
+    "Nome": "Kaio Lima dos Santos",
+    "Logradouro": "Av Rangel Pestana",
+    "Email": "k2@gmail.com",
+    "Estado": "SP",
+    "Cidade": "S\u00E3o Paulo"
+  },
+  {
+    "Id": "453ec902-7294-4d2d-bb7e-fad046ba09f5",
+    "Nome": "Kaio Lima dos Santos",
+    "Logradouro": "Rua Santa Marta 133",
+    "Email": "k2@gmail.com",
+    "Estado": "PA",
+    "Cidade": "Parauapebas"
+  },
+  {
+    "Id": "6c1f97ab-a1a1-40c8-8a91-9d246986ce30",
+    "Nome": "Bruno Costa Borges",
+    "Logradouro": "Av Rangel Pestana 0000",
+    "Email": "B@gmail.com",
+    "Estado": "SP",
+    "Cidade": "S\u00E3o Paulo"
+  },
+  {
+    "Id": "73015cf2-08cb-49d6-a262-6ab59530e1b2",
+    "Nome": "Kiara Lima",
+    "Logradouro": "Rua visconde de Parnaiba",
+    "Email": "Ki@gmail.com",
+    "Estado": "SP",
+    "Cidade": "S\u00E3o Paulo"
+  },
+  {
+    "Id": "ada2fcff-971b-43b3-b190-388723cf057b",
+    "Nome": "Kyle Lima",
+    "Logradouro": "Av Rangel Pestana 0000",
+    "Email": "KyleLima@hotmail",
+    "Estado": "SP",
+    "Cidade": "S\u00E3o Paulo"
+  }
+]

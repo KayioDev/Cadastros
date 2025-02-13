@@ -1,0 +1,15 @@
+@namespace CadastroDeUsuarios.Alert
+
+@if (!string.IsNullOrEmpty(Mensagem))
+{
+    <div class="alert alert-@TipoAlerta" role="alert">
+        @Mensagem
+    </div>
+}
+
+@code {
+    [Parameter] 
+    public string? Mensagem { get; set; }
+    [Parameter] 
+    public string TipoAlerta { get; set; } = "primary";
+}

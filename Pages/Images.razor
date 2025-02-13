@@ -1,0 +1,29 @@
+@page "/image"
+@inject ImagesService images;
+
+@if (dogResponses is null)
+{
+  <button @onclick="MostarImagens">Clique para mostar as imagens</button>
+}
+else
+{
+    <div>
+        @foreach (var img in dogResponses)
+        {
+            <img src="@img.Download_url" alt="Imagem" style="width: 150px; height: auto; margin: 10px;" />
+        }
+    </div>
+}
+
+
+
+@code 
+{
+    private List<DogResponse>? dogResponses ;
+    private async Task MostarImagens () 
+    {
+        dogResponses = await images.PegarImagens();
+    }
+    
+
+}   
