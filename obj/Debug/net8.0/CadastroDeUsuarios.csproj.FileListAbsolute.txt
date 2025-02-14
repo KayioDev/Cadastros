@@ -77,3 +77,4 @@ C:\Users\Kylel\Estudos\Cadastro\CadastroDeUsuarios\obj\Debug\net8.0\refint\Cadas
 C:\Users\Kylel\Estudos\Cadastro\CadastroDeUsuarios\obj\Debug\net8.0\CadastroDeUsuarios.pdb
 C:\Users\Kylel\Estudos\Cadastro\CadastroDeUsuarios\obj\Debug\net8.0\CadastroDeUsuarios.genruntimeconfig.cache
 C:\Users\Kylel\Estudos\Cadastro\CadastroDeUsuarios\obj\Debug\net8.0\ref\CadastroDeUsuarios.dll
+C:\Users\Kylel\Estudos\Cadastro\CadastroDeUsuarios\obj\Debug\net8.0\CadastroDeUsuarios.sourcelink.json

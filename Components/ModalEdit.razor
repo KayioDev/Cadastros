@@ -1,0 +1,61 @@
+@if (modalEdit)
+{
+    <div class="modal-dialog modal-xl" style="z-index: 1055;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Editar usuário</h5>
+                <button type="button" class="btn-close" @onclick="FecharModal"></button>
+            </div>
+            <div class="modal-body">
+              @if(novoUsuario is not null)
+              {     
+                    <EditForm Model="novoUsuario" OnValidSubmit="SalvarEdicao">
+                    <DataAnnotationsValidator />
+                    <p>Nome:</p>
+                    <input class="form-control" @bind="novoUsuario.Nome" placeholder="Insira novo nome" />
+                    <p>Logradouro:</p>
+                    <input class="form-control" @bind="novoUsuario.Logradouro" placeholder="Insira novo Endereço" />
+                    <p>Email:</p>
+                    <input class="form-control" @bind="novoUsuario.Email" placeholder="Insira novo email" />
+                    <p>Estado:</p>
+                    <input class="form-control" @bind="novoUsuario.Estado" placeholder="Insira novo estado" />
+                    <p>Cidade:</p>
+                    <input class="form-control" @bind="novoUsuario.Cidade" placeholder="Insira nova Cidade" />
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    </EditForm>
+              }
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="FecharModal">Fechar</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show" style="z-index: 1045;"></div>
+} 
+
+@code 
+{
+    [Parameter] 
+    public Usuario novoUsuario {get; set;} = new Usuario();
+    [Parameter]
+    public bool modalEdit {get; set;} = false;
+    [Parameter]
+    public EventCallback Fechar {get; set;}
+    private async Task FecharModal ()
+    {
+        if(Fechar.HasDelegate)
+        {
+          await Fechar.InvokeAsync();
+        }
+    }
+    [Parameter]
+    public EventCallback Salvar {get; set;}
+    private async Task SalvarEdicao () 
+    {
+        if(Salvar.HasDelegate) 
+        {
+           await Salvar.InvokeAsync();
+        }
+    }
+}

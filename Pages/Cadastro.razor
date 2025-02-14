@@ -37,7 +37,7 @@
     <div class="row g-2 grid gap-3 ">
         <div class="col-md">
             <div class="form-floating">
-                 <select class="form-select" id="" @onchange="BuscarCidade" >
+                 <select class="form-select" @onchange="BuscarCidade" >
                 <ValidationMessage For="(()=> Usuario.Estado)"></ValidationMessage> 
                  <option value="">Selecione um estado</option>
                  @if(estados is not null) 

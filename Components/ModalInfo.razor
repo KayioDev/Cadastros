@@ -1,0 +1,59 @@
+ @if (mostrarModal)
+{
+    <div class="modal-dialog modal-xl" style="z-index: 1055;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do Usuário</h5>
+                <button type="button" class="btn-close" @onclick="FecharModal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nome:</strong> @novoUsuario?.Nome</p>
+                <p><strong>Endereço:</strong> @novoUsuario?.Logradouro</p>
+                <p><strong>Email:</strong> @novoUsuario?.Email</p>
+                <p><strong>Cidade:</strong> @novoUsuario?.Cidade</p>
+                <p><strong>Estado:</strong> @novoUsuario?.Estado</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="FecharModal">Fechar</button>
+                <button type="button" class="btn btn-secondary" @onclick="EditarDados">Editar dados</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show" style="z-index: 1045;"></div>
+} 
+@code
+{
+    [Parameter]
+    public EventCallback Mostrar {get; set;}
+    private async Task MostrarDados () 
+    {
+        if(Mostrar.HasDelegate)
+        {
+           await Mostrar.InvokeAsync();
+        }
+    }
+    [Parameter]
+    public EventCallback Fechar {get; set;}
+    private async Task FecharModal ()
+    {
+        if(Fechar.HasDelegate)
+        {
+            await Fechar.InvokeAsync();
+        }
+    }
+    [Parameter]
+    public Usuario novoUsuario {get; set;} = new Usuario();
+    [Parameter]
+    public bool mostrarModal {get; set;} = false;
+    [Parameter]
+    public EventCallback Editar { get; set; }
+
+   private async Task EditarDados()
+    {
+        if (Editar.HasDelegate)
+        {
+            await Editar.InvokeAsync();
+        }
+    }
+ 
+}

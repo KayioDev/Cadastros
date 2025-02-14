@@ -5,11 +5,11 @@
 @using Microsoft.EntityFrameworkCore;
 
 <Alert Mensagem="@Mensagem" TipoAlerta="@TipoAlerta"></Alert>
+<h3 style=" font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; color: black;">Buscar usuario</h3>
 <form class="row row-cols-lg-auto g-3 align-items-center">
   <div class="col-12">
-    <label class="visually-hidden" for="inlineFormSelectPref">Preference</label>
-    <select class="form-select" id="inlineFormSelectPref" @bind="usuarioGuidId">
-      <option value="" selected>Selecione um usuário</option>
+    <select class="form-select" @bind="usuarioGuidId">
+      <option value="" >Selecione um usuário</option>
       @if (usuarios is not null)
       {
         @foreach (var user in usuarios)
@@ -28,65 +28,9 @@
 </form>
 
 
- @if (mostrarModal)
-{
-    <div class="modal-dialog modal-xl" style="z-index: 1055;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Detalhes do Usuário</h5>
-                <button type="button" class="btn-close" @onclick="FecharModal"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Nome:</strong> @novoUsuario?.Nome</p>
-                <p><strong>Endereço:</strong> @novoUsuario?.Logradouro</p>
-                <p><strong>Email:</strong> @novoUsuario?.Email</p>
-                <p><strong>Cidade:</strong> @novoUsuario?.Cidade</p>
-                <p><strong>Estado:</strong> @novoUsuario?.Estado</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="FecharModal">Fechar</button>
-                <button type="button" class="btn btn-secondary" @onclick="EditarDados">Editar dados</button>
-            </div>
-        </div>
-    </div>
-    <div class="modal-backdrop fade show" style="z-index: 1045;"></div>
-} 
+<CadastroDeUsuarios.Components.ModalInfo  Mostrar="@MostrarDados" Fechar="FecharModal" Editar="EditarDados" novoUsuario="@novoUsuario"  mostrarModal="@mostrarModal" ></CadastroDeUsuarios.Components.ModalInfo>
+<CadastroDeUsuarios.Components.ModalEdit  modalEdit="@modalEdit" novoUsuario="@novoUsuario" Fechar="FecharModal" Salvar="SalvarEdicao" ></CadastroDeUsuarios.Components.ModalEdit>
 
- @if (modalEdit)
-{
-    <div class="modal-dialog modal-xl" style="z-index: 1055;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5>Editar usuário</h5>
-                <button type="button" class="btn-close" @onclick="FecharModal"></button>
-            </div>
-            <div class="modal-body">
-              @if(novoUsuario is not null)
-              {     
-                    <EditForm Model="novoUsuario" OnValidSubmit="SalvarEdicao">
-                    <DataAnnotationsValidator />
-                    <p>Nome:</p>
-                    <input class="form-control" @bind="novoUsuario.Nome" placeholder="Insira novo nome" />
-                    <p>Logradouro:</p>
-                    <input class="form-control" @bind="novoUsuario.Logradouro" placeholder="Insira novo Endereço" />
-                    <p>Email:</p>
-                    <input class="form-control" @bind="novoUsuario.Email" placeholder="Insira novo email" />
-                    <p>Estado:</p>
-                    <input class="form-control" @bind="novoUsuario.Estado" placeholder="Insira novo estado" />
-                    <p>Cidade:</p>
-                    <input class="form-control" @bind="novoUsuario.Cidade" placeholder="Insira nova Cidade" />
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                    </EditForm>
-              }
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="FecharModal">Fechar</button>
-            </div>
-        </div>
-    </div>
-    <div class="modal-backdrop fade show" style="z-index: 1045;"></div>
-} 
 
 
 @code {
