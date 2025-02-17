@@ -19,16 +19,53 @@
       }
     </select>
   </div>
+  <div>
+  </div>
+   <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" @onclick="ToggleDropdown">
+        Buscar usuário
+    </button>
+    <ul class="dropdown-menu @(dropdownAberto ? "show" : "")" style="width: 250px; padding: 10px;">
+        <li>
+            <input type="text" class="form-control" placeholder="Digite o nome..." @oninput="FiltrarUsuario" />
+        </li>
+        <hr />
+   
+        @if (usuariosFiltrados.Any())
+        {
+            @foreach (var usuario in usuariosFiltrados)
+            {
+                <li>
+                    <button type="button" class="dropdown-item" @onclick="() => AbrirModal(usuario)">
+                        @usuario.Nome
+                    </button>
+                </li>
+            }
+        }
+        else
+        {
+            <li><span class="dropdown-item text-muted">Nenhum usuário encontrado</span></li>
+        }
+    </ul>
+</div>
   <div class="col-12">
     <button type="button" class="btn btn-primary" @onclick="MostrarDados">Mostrar dados</button>
   </div>
    <div class="col-12">
     <button type="button" class="btn btn-primary" @onclick="ApagarUsuario">Apagar Usuário</button>
   </div>
+
+
 </form>
-
-
-<CadastroDeUsuarios.Components.ModalInfo  Mostrar="@MostrarDados" Fechar="FecharModal" Editar="EditarDados" novoUsuario="@novoUsuario"  mostrarModal="@mostrarModal" ></CadastroDeUsuarios.Components.ModalInfo>
+@if (mostrarModal)
+{
+    <CadastroDeUsuarios.Components.ModalInfo  
+        Mostrar="@MostrarDados" 
+        Fechar="FecharModal" 
+        Editar="EditarDados" 
+        novoUsuario="@novoUsuario"  
+        mostrarModal="@mostrarModal" />
+}
 <CadastroDeUsuarios.Components.ModalEdit  modalEdit="@modalEdit" novoUsuario="@novoUsuario" Fechar="FecharModal" Salvar="SalvarEdicao" ></CadastroDeUsuarios.Components.ModalEdit>
 
 
@@ -37,12 +74,14 @@
     private List<Usuario> usuarios = new();
     private Guid usuarioGuidId ;
     private Usuario? novoUsuario ;
+    private List<Usuario> usuariosFiltrados = new ();
 
     private string? Mensagem = "";
     private string? TipoAlerta = "";
     private bool mostrarModal = false;
-
     private bool modalEdit = false;
+    private bool dropdownAberto = false;
+
 
 
     protected override async Task OnInitializedAsync()
@@ -50,18 +89,35 @@
           usuarios = await Db.Usuarios.ToListAsync();
           usuarios.Sort((a,b)=> string.Compare(a.Nome, b.Nome, StringComparison.OrdinalIgnoreCase));
     }
-
-
+    
      private void MostrarDados()
     {
-   
-        if (usuarioGuidId != Guid.Empty)
-        {
-            novoUsuario = usuarios.FirstOrDefault(user => user.Id == usuarioGuidId);
-            mostrarModal = true;
-        }
+      if (usuarioGuidId != Guid.Empty)
+      {
+        novoUsuario = usuarios.FirstOrDefault(user => user.Id == usuarioGuidId);
+        mostrarModal = true;
+      }
     }
 
+    private void ToggleDropdown()
+    {
+        dropdownAberto = !dropdownAberto; 
+    }
+
+     private async Task SalvarEdicao()
+    {
+      if (novoUsuario != null)
+      {
+        Db.Usuarios.Update(novoUsuario);
+        await Db.SaveChangesAsync();
+        Mensagem = "Usuário editado com sucesso!";
+        TipoAlerta = "success";
+        modalEdit = false;
+        StateHasChanged();
+        await Task.Delay(3000);
+        Mensagem = null;        
+      }
+    } 
      private async Task ApagarUsuario () 
      {
       if(usuarioGuidId != Guid.Empty)
@@ -92,26 +148,32 @@
          mostrarModal = false;
          modalEdit = false;
     }
-
-     private async Task SalvarEdicao()
+    private void AbrirModal(Usuario usuario) 
     {
-        if (novoUsuario != null)
+        novoUsuario = usuario;
+        mostrarModal = true;
+        StateHasChanged(); 
+        dropdownAberto = false;
+    }
+
+        private async Task CarregarUsuarios()
+    {
+        usuarios = await Db.Usuarios.ToListAsync();
+    }
+
+       private void FiltrarUsuario(ChangeEventArgs args) 
+    {
+        var nomeDeBusca = args.Value?.ToString()?.ToLower() ?? "";
+        if (!string.IsNullOrEmpty(nomeDeBusca))
         {
-         Db.Usuarios.Update(novoUsuario);
-         await Db.SaveChangesAsync();
-
-        Mensagem = "Usuário editado com sucesso!";
-        TipoAlerta = "success";
-        modalEdit = false;
-        StateHasChanged();
-        await Task.Delay(3000);
-        Mensagem = null;        
+            usuariosFiltrados = Db.Usuarios.AsEnumerable()
+                .Where(user => user.Nome.ToLower().Contains(nomeDeBusca, StringComparison.OrdinalIgnoreCase))
+                .ToList();
         }
-    } 
-    private async Task CarregarUsuarios()
-{
-    usuarios = await Db.Usuarios.ToListAsync();
-}
-
+        else
+        {
+            usuariosFiltrados = new List<Usuario> ();
+        }
+    }
 }
 

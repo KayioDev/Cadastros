@@ -14,19 +14,26 @@
         <h1 class="mb-4 ">Cadastro de Endereço:</h1>
         <h3 class="mb-4 ">Dados pesssoais:</h3>
     <div class="input_info">
-        <div class="row g-3 grid gap-3">
+        <div class="row g-3 ">
             <div class="col-md-4">
                 <div class="form-floating">
-                    <input class="form-control" id="floatingInputGrid" @bind="Usuario.Nome" /> 
-                    <label for="floatingInputGrid">Nome:</label>
+                    <input class="form-control" id="nomeinput" autocomplete="off" @bind="Usuario.Nome" /> 
+                    <label for="nomeinput">Nome:</label>
                    <ValidationMessage For="@(() => Usuario.Nome)" />
                 </div>
             </div>      
              <div class="col-md-4">
                 <div class="form-floating">
-                    <input type="email" class="form-control" id="floatingInputGrid" @bind="Usuario.Email" />
-                    <label for="floatingInputGrid">Email:</label>
+                    <input type="email" class="form-control" autocomplete="off" id="emailinput" @bind="Usuario.Email" />
+                    <label for="emailinput">Email:</label>
                     <ValidationMessage For="@(() => Usuario.Email)" />
+                </div>
+            </div>  
+            <div class="col-md-4">
+                <div class="form-floating">
+                    <input class="form-control"  autocomplete="off" id="idadeinput" @bind="Usuario.Idade" />
+                    <label for="idadeinput">Idade:</label>
+                    <ValidationMessage For="@(() => Usuario.Idade)" />
                 </div>
             </div>
         </div>
@@ -37,8 +44,8 @@
     <div class="row g-2 grid gap-3 ">
         <div class="col-md">
             <div class="form-floating">
-                 <select class="form-select" @onchange="BuscarCidade" >
                 <ValidationMessage For="(()=> Usuario.Estado)"></ValidationMessage> 
+                 <select class="form-select" @onchange="BuscarCidade" >
                  <option value="">Selecione um estado</option>
                  @if(estados is not null) 
                     {   
@@ -70,7 +77,7 @@
         </div>
         <div class="col-md-4">
                 <div class="form-floating">
-                    <input class="form-control" id="floatingInputGrid" @bind="Usuario.Logradouro" />
+                    <input class="form-control" id="floatingInputGrid" autocomplete="off" @bind="Usuario.Logradouro" />
                     <ValidationMessage For="@( () => Usuario.Logradouro)"></ValidationMessage>
                     <label for="floatingInputGrid">Logradouro:</label>
                 </div>
@@ -106,7 +113,6 @@
     private async Task BuscarCidade (ChangeEventArgs args) 
     {
        var estadoSelecionado = args.Value?.ToString() ?? "";
-
        if(estadoSelecionado != null)
        {
         cidades = await CidadeService.ObterCidadesPorEstado(estadoSelecionado);

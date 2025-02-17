@@ -23,6 +23,12 @@ h3[b-2hvzuvb0po]
     display: flex;
     justify-content: center;
 }
+
+.input_info[b-2hvzuvb0po]
+{
+    display: grid;
+    grid-column: 1fr 1fr 1fr;
+}
 /* _content/CadastroDeUsuarios/Shared/MainLayout.razor.rz.scp.css */
 .page[b-z116tambi1] {
     position: relative;
